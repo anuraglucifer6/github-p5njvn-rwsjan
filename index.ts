@@ -5,19 +5,16 @@
  */
 import { stationData } from './stationData';
 
-const mapIcons: {
-  color: string;
-  opacity: number;
-}[] = [
-  { color: '#0F0', opacity: 0.4 },
-  { color: '#0F0', opacity: 0.7 },
-  { color: '#0F0', opacity: 1.0 },
-  { color: '#00F', opacity: 0.4 },
-  { color: '#00F', opacity: 0.7 },
-  { color: '#00F', opacity: 1.0 },
-  { color: '#F00', opacity: 0.4 },
-  { color: '#F00', opacity: 0.7 },
-  { color: '#F00', opacity: 1.0 },
+const color = [
+  '#00ffff',
+  '#00bfff',
+  '#009fff',
+  '#0080ff',
+  '#0060ff',
+  '#0040ff',
+  '#0020ff',
+  '#0010d9',
+  '#0000b3',
 ];
 
 function getIconIndex(freq: number) {
@@ -69,8 +66,8 @@ function initMap(): void {
         {
           path: google.maps.SymbolPath.CIRCLE,
           scale: 5,
-          fillColor: mapIcons[getIconIndex(freq)].color,
-          fillOpacity: mapIcons[getIconIndex(freq)].opacity,
+          fillColor: color[getIconIndex(freq)],
+          fillOpacity: 1.0,
           strokeWeight: 1,
         },
         getIconIndex(freq),
