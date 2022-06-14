@@ -84,7 +84,7 @@ function initMap(): void {
     if (freq > 0) {
       const {name = '', cityName = '', stateName = '' } = stationInfo[code];
       const { asHalt, asNonHalt } = extraStationInfo[code] || {};
-      const infoString = `<h3>${code}</h3>${name}<br>${cityName}, ${stateName}<br>Boading : ${boardingFreq}<br>Deboarding : ${departureFreq}<br>Halting : ${asHalt} trains<br>Non Haltiing : ${asNonHalt || 0} trains`;
+      const infoString = `<h3>${code}</h3>${name}<br>${cityName}, ${stateName}<br>MMT Users Boading : ${boardingFreq}<br>MMT Users Deboarding : ${departureFreq}<br>Halting : ${asHalt} trains<br>Non Haltiing : ${asNonHalt || 0} trains`;
       addMarker(
         location,
         {
