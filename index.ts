@@ -4,6 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 import { stationData } from './stationData';
+import { stationInfo } from './stationInfo';
+import { extraStationInfo } from './extraStationInfo';
 
 const color = [
   '#00ffff',
@@ -34,16 +36,29 @@ function addMarker(
   location: google.maps.LatLngLiteral,
   icon: google.maps.Symbol,
   zIndex: number,
-  map: google.maps.Map
+  map: google.maps.Map,
+  infoWindow: google.maps.InfoWindow,
+  infoString: string,
 ) {
   // Add the marker at the clicked location, and add the next-available label
   // from the array of alphabetical characters.
-  new google.maps.Marker({
+  const marker = new google.maps.Marker({
     position: location,
     icon: icon,
     zIndex: zIndex,
     map: map,
   });
+
+  google.maps.event.addListener(marker, 'mouseover', function(e) {
+    infoWindow.setPosition(e.latLng);
+    infoWindow.setContent(infoString);
+    infoWindow.open(map);
+ });
+ 
+ // Close the InfoWindow on mouseout:
+ google.maps.event.addListener(marker, 'mouseout', function() {
+    infoWindow.close();
+ });
 }
 
 function initMap(): void {
@@ -55,14 +70,23 @@ function initMap(): void {
       center: center,
     }
   );
+  const infowindow = new google.maps.InfoWindow();
 
   // Add a marker at the center of the map.
   // addMarker(center, 'ANCHOR', map);
-  stationData.forEach((station) => {
-    const freq = station.boardingFreq + station.departureFreq;
+  stationData.forEach(({
+    code,
+    location,
+    boardingFreq,
+    departureFreq,
+  }) => {
+    const freq = boardingFreq + departureFreq;
     if (freq > 0) {
+      const {name = '', cityName = '', stateName = '' } = stationInfo[code];
+      const { asHalt, asNonHalt } = extraStationInfo[code] || {};
+      const infoString = `<h3>${code}</h3>${name}<br>${cityName}, ${stateName}<br>Boading : ${boardingFreq}<br>Deboarding : ${departureFreq}<br>As Halting : ${asHalt}<br>As Non Haltiing : ${asNonHalt || 0}`;
       addMarker(
-        station.location,
+        location,
         {
           path: google.maps.SymbolPath.CIRCLE,
           scale: 5,
@@ -71,7 +95,9 @@ function initMap(): void {
           strokeWeight: 1,
         },
         getIconIndex(freq),
-        map
+        map,
+        infowindow,
+        infoString,
       );
     }
   });
